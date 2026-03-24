@@ -30,17 +30,24 @@ export default function Auth() {
           email,
           password,
         });
-        if (error) throw error;
+        if (error) {
+          console.error('Sign Up Error:', error);
+          throw error;
+        }
         alert('Check your email for the confirmation link!');
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
-        if (error) throw error;
+        if (error) {
+          console.error('Sign In Error:', error);
+          throw error;
+        }
         navigate('/dashboard');
       }
     } catch (err: any) {
+      console.error('Auth Exception:', err);
       setError(err.message);
     } finally {
       setLoading(false);
