@@ -52,7 +52,6 @@ export default function Admin() {
     const { data, error } = await supabase
       .from('products')
       .select('*')
-      .eq('status', 'pending')
       .order('created_at', { ascending: false });
       
     if (!error && data) {
@@ -62,12 +61,13 @@ export default function Admin() {
 
   const handleProductAction = async (productId: string, action: 'approved' | 'rejected') => {
     try {
-      const { error } = await supabase
-        .from('products')
-        .update({ status: action })
-        .eq('id', productId);
+      // Status column removed for now
+      // const { error } = await supabase
+      //   .from('products')
+      //   .update({ status: action })
+      //   .eq('id', productId);
         
-      if (error) throw error;
+      // if (error) throw error;
       
       // Remove from list
       setPendingProducts(prev => prev.filter(p => p.id !== productId));
@@ -91,8 +91,7 @@ export default function Admin() {
             title: formData.title,
             description: formData.description,
             price: parseFloat(formData.price),
-            image_url: formData.image_url || `https://picsum.photos/seed/${encodeURIComponent(formData.title)}/800/600`,
-            status: 'approved' // Admin added products are auto-approved
+            image_url: formData.image_url || `https://picsum.photos/seed/${encodeURIComponent(formData.title)}/800/600`
           }
         ]);
 

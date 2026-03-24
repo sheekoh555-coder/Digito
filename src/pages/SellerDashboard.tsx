@@ -80,8 +80,7 @@ export default function SellerDashboard() {
             description: formData.description,
             price: parseFloat(formData.price),
             image_url: formData.image_url || `https://picsum.photos/seed/${encodeURIComponent(formData.title)}/800/600`,
-            seller_id: userId,
-            status: 'pending'
+            seller_id: userId
           }
         ]);
 
@@ -231,9 +230,7 @@ export default function SellerDashboard() {
                   </p>
                 </div>
                 <div>
-                  {product.status === 'approved' && <span className="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-lg"><CheckCircle className="w-3 h-3"/> Approved</span>}
-                  {product.status === 'pending' && <span className="flex items-center gap-1 text-xs font-medium text-yellow-600 bg-yellow-50 px-2 py-1 rounded-lg"><Clock className="w-3 h-3"/> Pending</span>}
-                  {product.status === 'rejected' && <span className="flex items-center gap-1 text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-lg"><XCircle className="w-3 h-3"/> Rejected</span>}
+                  {/* Status column removed */}
                 </div>
               </div>
             ))

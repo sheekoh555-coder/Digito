@@ -9,6 +9,7 @@ interface Product {
   description: string;
   price: number;
   image_url: string;
+  seller_id?: string;
 }
 
 export default function Home() {
@@ -20,7 +21,6 @@ export default function Home() {
       const { data, error } = await supabase
         .from('products')
         .select('*, profiles(*)')
-        .eq('status', 'approved')
         .order('created_at', { ascending: false });
       
       if (error) {
