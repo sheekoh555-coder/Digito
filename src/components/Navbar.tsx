@@ -5,14 +5,37 @@ import { supabase } from '../supabase';
 
 export default function Navbar() {
   const [user, setUser] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    const checkAdminStatus = async (userId: string) => {
+      try {
+        const { data } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', userId)
+          .single();
+        setIsAdmin(!!data?.is_admin);
+      } catch (err) {
+        console.error('Error checking admin status:', err);
+        setIsAdmin(false);
+      }
+    };
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAdminStatus(session.user.id);
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAdminStatus(session.user.id);
+      } else {
+        setIsAdmin(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -29,10 +52,12 @@ export default function Navbar() {
             <span className="font-semibold text-xl tracking-tight">Digito</span>
           </Link>
           <div className="flex items-center gap-6">
-            <Link to="/admin" className="bg-neutral-900 text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-colors flex items-center gap-2 text-sm font-medium">
-              <Shield className="w-4 h-4" />
-              <span>Admin</span>
-            </Link>
+            {isAdmin && (
+              <Link to="/admin" className="bg-neutral-900 text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-colors flex items-center gap-2 text-sm font-medium">
+                <Shield className="w-4 h-4" />
+                <span>Admin</span>
+              </Link>
+            )}
             {user ? (
               <Link to="/dashboard" className="text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-2 text-sm font-medium">
                 <User className="w-4 h-4" />

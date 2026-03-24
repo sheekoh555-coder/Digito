@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { Plus, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Admin() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     title: '',
@@ -13,6 +16,35 @@ export default function Admin() {
     price: '',
     image_url: ''
   });
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate('/');
+        return;
+      }
+      
+      try {
+        const { data } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', session.user.id)
+          .single();
+          
+        if (!data?.is_admin) {
+          navigate('/');
+        } else {
+          setIsCheckingAdmin(false);
+        }
+      } catch (err) {
+        console.error('Error checking admin status:', err);
+        navigate('/');
+      }
+    };
+    
+    checkAdmin();
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,6 +74,14 @@ export default function Admin() {
       setLoading(false);
     }
   };
+
+  if (isCheckingAdmin) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-neutral-900" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto py-12">
