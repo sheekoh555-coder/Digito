@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { Plus, Loader2, Check, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Admin() {
   const [loading, setLoading] = useState(false);
@@ -115,12 +115,26 @@ export default function Admin() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
-      <div>
-        <div className="mb-10">
-          <h1 className="text-3xl font-semibold tracking-tight mb-2">Add New Product</h1>
-          <p className="text-neutral-500">Directly create an approved digital product.</p>
+    <div className="max-w-5xl mx-auto py-12">
+      <div className="flex justify-between items-center mb-10">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight mb-2">Admin Dashboard</h1>
+          <p className="text-neutral-500">Manage products and platform settings.</p>
         </div>
+        <Link 
+          to="/admin/commissions" 
+          className="bg-white border border-neutral-200 text-neutral-900 px-6 py-3 rounded-xl font-medium hover:bg-neutral-50 transition-colors flex items-center gap-2 shadow-sm"
+        >
+          View Commissions
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div>
+          <div className="mb-10">
+            <h2 className="text-2xl font-semibold tracking-tight mb-2">Add New Product</h2>
+            <p className="text-neutral-500">Directly create an approved digital product.</p>
+          </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl border border-neutral-200 shadow-sm">
         {error && (
@@ -257,5 +271,6 @@ export default function Admin() {
         </div>
       </div>
     </div>
+  </div>
   );
 }

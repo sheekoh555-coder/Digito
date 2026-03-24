@@ -6,6 +6,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
+import AdminCommissions from './pages/AdminCommissions';
 import Auth from './pages/Auth';
 import ProductDetails from './pages/ProductDetails';
 import Dashboard from './pages/Dashboard';
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/seller" element={<SellerDashboard />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/commissions" element={<AdminCommissions />} />
             <Route path="/auth" element={<Auth />} />
           </Routes>
         </main>
