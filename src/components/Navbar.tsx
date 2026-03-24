@@ -6,35 +6,39 @@ import { supabase } from '../supabase';
 export default function Navbar() {
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
 
   useEffect(() => {
-    const checkAdminStatus = async (userId: string) => {
+    const checkUserRoles = async (userId: string) => {
       try {
         const { data } = await supabase
           .from('profiles')
-          .select('is_admin')
+          .select('is_admin, is_seller')
           .eq('id', userId)
           .single();
         setIsAdmin(!!data?.is_admin);
+        setIsSeller(!!data?.is_seller);
       } catch (err) {
-        console.error('Error checking admin status:', err);
+        console.error('Error checking user roles:', err);
         setIsAdmin(false);
+        setIsSeller(false);
       }
     };
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        checkAdminStatus(session.user.id);
+        checkUserRoles(session.user.id);
       }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        checkAdminStatus(session.user.id);
+        checkUserRoles(session.user.id);
       } else {
         setIsAdmin(false);
+        setIsSeller(false);
       }
     });
 
@@ -56,6 +60,12 @@ export default function Navbar() {
               <Link to="/admin" className="bg-neutral-900 text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-colors flex items-center gap-2 text-sm font-medium">
                 <Shield className="w-4 h-4" />
                 <span>Admin</span>
+              </Link>
+            )}
+            {isSeller && (
+              <Link to="/seller" className="text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-2 text-sm font-medium">
+                <ShoppingBag className="w-4 h-4" />
+                <span className="hidden sm:inline">Seller</span>
               </Link>
             )}
             {user ? (

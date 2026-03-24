@@ -19,7 +19,8 @@ export default function Home() {
     async function fetchProducts() {
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select('*, profiles(*)')
+        .eq('status', 'approved')
         .order('created_at', { ascending: false });
       
       if (error) {
@@ -98,7 +99,10 @@ export default function Home() {
                     <h3 className="text-lg font-medium text-neutral-900 group-hover:text-neutral-600 transition-colors">
                       {product.title}
                     </h3>
-                    <p className="text-sm text-neutral-500 mt-1 line-clamp-1">{product.description}</p>
+                    <p className="text-xs text-neutral-400 mt-1">
+                      Sold by: {(product as any).profiles?.full_name || (product as any).profiles?.username || (product as any).profiles?.email || 'Verified Seller'}
+                    </p>
+                    <p className="text-sm text-neutral-500 mt-2 line-clamp-1">{product.description}</p>
                   </div>
                   <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
                 </div>

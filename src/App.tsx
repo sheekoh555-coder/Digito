@@ -9,6 +9,7 @@ import Admin from './pages/Admin';
 import Auth from './pages/Auth';
 import ProductDetails from './pages/ProductDetails';
 import Dashboard from './pages/Dashboard';
+import SellerDashboard from './pages/SellerDashboard';
 import Navbar from './components/Navbar';
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/seller" element={<SellerDashboard />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/auth" element={<Auth />} />
           </Routes>

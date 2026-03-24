@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
-import { Plus, Loader2 } from 'lucide-react';
+import { Plus, Loader2, Check, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Admin() {
@@ -8,6 +8,7 @@ export default function Admin() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
+  const [pendingProducts, setPendingProducts] = useState<any[]>([]);
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -36,6 +37,7 @@ export default function Admin() {
           navigate('/');
         } else {
           setIsCheckingAdmin(false);
+          fetchPendingProducts();
         }
       } catch (err) {
         console.error('Error checking admin status:', err);
@@ -45,6 +47,35 @@ export default function Admin() {
     
     checkAdmin();
   }, [navigate]);
+
+  const fetchPendingProducts = async () => {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+      
+    if (!error && data) {
+      setPendingProducts(data);
+    }
+  };
+
+  const handleProductAction = async (productId: string, action: 'approved' | 'rejected') => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ status: action })
+        .eq('id', productId);
+        
+      if (error) throw error;
+      
+      // Remove from list
+      setPendingProducts(prev => prev.filter(p => p.id !== productId));
+    } catch (err: any) {
+      console.error('Error updating product:', err);
+      alert('Failed to update product status.');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +91,8 @@ export default function Admin() {
             title: formData.title,
             description: formData.description,
             price: parseFloat(formData.price),
-            image_url: formData.image_url || `https://picsum.photos/seed/${encodeURIComponent(formData.title)}/800/600`
+            image_url: formData.image_url || `https://picsum.photos/seed/${encodeURIComponent(formData.title)}/800/600`,
+            status: 'approved' // Admin added products are auto-approved
           }
         ]);
 
@@ -84,13 +116,14 @@ export default function Admin() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-12">
-      <div className="mb-10">
-        <h1 className="text-3xl font-semibold tracking-tight mb-2">Add New Product</h1>
-        <p className="text-neutral-500">Create a new digital product listing in the store.</p>
-      </div>
+    <div className="max-w-5xl mx-auto py-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div>
+        <div className="mb-10">
+          <h1 className="text-3xl font-semibold tracking-tight mb-2">Add New Product</h1>
+          <p className="text-neutral-500">Directly create an approved digital product.</p>
+        </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl border border-neutral-200 shadow-sm">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl border border-neutral-200 shadow-sm">
         {error && (
           <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium">
             {error}
@@ -179,6 +212,51 @@ export default function Admin() {
           )}
         </button>
       </form>
+      </div>
+
+      <div>
+        <div className="mb-10">
+          <h2 className="text-2xl font-semibold tracking-tight mb-2">Pending Approvals</h2>
+          <p className="text-neutral-500">Review products submitted by sellers.</p>
+        </div>
+        
+        <div className="space-y-4">
+          {pendingProducts.length === 0 ? (
+            <div className="p-8 text-center bg-white rounded-3xl border border-neutral-200 text-neutral-500">
+              No pending products to review.
+            </div>
+          ) : (
+            pendingProducts.map(product => (
+              <div key={product.id} className="p-5 bg-white rounded-2xl border border-neutral-200 shadow-sm flex flex-col gap-4">
+                <div className="flex items-start gap-4">
+                  <div className="w-20 h-20 bg-neutral-100 rounded-xl overflow-hidden flex-shrink-0">
+                    {product.image_url && <img src={product.image_url} alt={product.title} className="w-full h-full object-cover" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-neutral-900 truncate">{product.title}</h3>
+                    <p className="text-sm text-neutral-500 mt-1 line-clamp-2">{product.description}</p>
+                    <p className="text-sm font-semibold text-neutral-900 mt-2">${product.price.toFixed(2)}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2 pt-2 border-t border-neutral-100">
+                  <button 
+                    onClick={() => handleProductAction(product.id, 'approved')}
+                    className="flex-1 bg-green-50 text-green-700 py-2 rounded-lg font-medium hover:bg-green-100 transition-colors flex items-center justify-center gap-1 text-sm"
+                  >
+                    <Check className="w-4 h-4" /> Approve
+                  </button>
+                  <button 
+                    onClick={() => handleProductAction(product.id, 'rejected')}
+                    className="flex-1 bg-red-50 text-red-700 py-2 rounded-lg font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-1 text-sm"
+                  >
+                    <X className="w-4 h-4" /> Reject
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 }

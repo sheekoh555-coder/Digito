@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../supabase';
-import { ArrowLeft, Check, Download } from 'lucide-react';
+import { ArrowLeft, Check, Download, Store } from 'lucide-react';
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -13,7 +13,7 @@ export default function ProductDetails() {
       if (!id) return;
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select('*, profiles(*)')
         .eq('id', id)
         .single();
       
@@ -60,6 +60,8 @@ export default function ProductDetails() {
     );
   }
 
+  const sellerName = product.profiles?.full_name || product.profiles?.username || product.profiles?.email || 'Verified Seller';
+
   return (
     <div className="max-w-5xl mx-auto py-8">
       <Link to="/" className="inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-900 mb-8 transition-colors">
@@ -83,6 +85,10 @@ export default function ProductDetails() {
         </div>
 
         <div className="pt-4">
+          <div className="flex items-center gap-2 text-neutral-500 mb-4">
+            <Store className="w-4 h-4" />
+            <span className="text-sm font-medium">{sellerName}</span>
+          </div>
           <h1 className="text-4xl font-semibold tracking-tight text-neutral-900 mb-4">
             {product.title}
           </h1>
