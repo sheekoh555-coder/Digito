@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { Plus, Loader2, Check, X } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Admin() {
   const [loading, setLoading] = useState(false);
@@ -10,6 +11,7 @@ export default function Admin() {
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
   const [pendingProducts, setPendingProducts] = useState<any[]>([]);
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   const [formData, setFormData] = useState({
     title: '',
@@ -118,21 +120,29 @@ export default function Admin() {
     <div className="max-w-5xl mx-auto py-12">
       <div className="flex justify-between items-center mb-10">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight mb-2">Admin Dashboard</h1>
-          <p className="text-neutral-500">Manage products and platform settings.</p>
+          <h1 className="text-3xl font-semibold tracking-tight mb-2">{t('admin.dashboard')}</h1>
+          <p className="text-neutral-500">{t('admin.manage')}</p>
         </div>
-        <Link 
-          to="/admin/commissions" 
-          className="bg-white border border-neutral-200 text-neutral-900 px-6 py-3 rounded-xl font-medium hover:bg-neutral-50 transition-colors flex items-center gap-2 shadow-sm"
-        >
-          View Commissions
-        </Link>
+        <div className="flex gap-4">
+          <Link 
+            to="/admin/payouts" 
+            className="bg-white border border-neutral-200 text-neutral-900 px-6 py-3 rounded-xl font-medium hover:bg-neutral-50 transition-colors flex items-center gap-2 shadow-sm"
+          >
+            {t('admin.payoutRequests')}
+          </Link>
+          <Link 
+            to="/admin/commissions" 
+            className="bg-white border border-neutral-200 text-neutral-900 px-6 py-3 rounded-xl font-medium hover:bg-neutral-50 transition-colors flex items-center gap-2 shadow-sm"
+          >
+            {t('admin.viewCommissions')}
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div>
           <div className="mb-10">
-            <h2 className="text-2xl font-semibold tracking-tight mb-2">Add New Product</h2>
+            <h2 className="text-2xl font-semibold tracking-tight mb-2">{t('admin.addNewProduct')}</h2>
             <p className="text-neutral-500">Directly create an approved digital product.</p>
           </div>
 
@@ -151,7 +161,7 @@ export default function Admin() {
 
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-neutral-700 mb-2">
-            Product Title
+            {t('dashboard.title')}
           </label>
           <input
             type="text"
@@ -166,7 +176,7 @@ export default function Admin() {
 
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-neutral-700 mb-2">
-            Description
+            {t('dashboard.description')}
           </label>
           <textarea
             id="description"
@@ -182,7 +192,7 @@ export default function Admin() {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label htmlFor="price" className="block text-sm font-medium text-neutral-700 mb-2">
-              Price ($)
+              {t('dashboard.price')} ($)
             </label>
             <input
               type="number"
@@ -198,7 +208,7 @@ export default function Admin() {
           </div>
           <div>
             <label htmlFor="image_url" className="block text-sm font-medium text-neutral-700 mb-2">
-              Image URL (Optional)
+              {t('dashboard.imageUrl')} (Optional)
             </label>
             <input
               type="url"
@@ -220,7 +230,7 @@ export default function Admin() {
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
             <>
-              <Plus className="w-5 h-5" /> Add Product
+              <Plus className="w-5 h-5" /> {t('dashboard.addProduct')}
             </>
           )}
         </button>
@@ -229,7 +239,7 @@ export default function Admin() {
 
       <div>
         <div className="mb-10">
-          <h2 className="text-2xl font-semibold tracking-tight mb-2">Pending Approvals</h2>
+          <h2 className="text-2xl font-semibold tracking-tight mb-2">{t('admin.pendingApprovals')}</h2>
           <p className="text-neutral-500">Review products submitted by sellers.</p>
         </div>
         
@@ -256,13 +266,13 @@ export default function Admin() {
                     onClick={() => handleProductAction(product.id, 'approved')}
                     className="flex-1 bg-green-50 text-green-700 py-2 rounded-lg font-medium hover:bg-green-100 transition-colors flex items-center justify-center gap-1 text-sm"
                   >
-                    <Check className="w-4 h-4" /> Approve
+                    <Check className="w-4 h-4" /> {t('admin.approve')}
                   </button>
                   <button 
                     onClick={() => handleProductAction(product.id, 'rejected')}
                     className="flex-1 bg-red-50 text-red-700 py-2 rounded-lg font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-1 text-sm"
                   >
-                    <X className="w-4 h-4" /> Reject
+                    <X className="w-4 h-4" /> {t('admin.reject')}
                   </button>
                 </div>
               </div>

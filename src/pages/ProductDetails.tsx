@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../supabase';
 import { ArrowLeft, Check, Download, Store } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     async function fetchProduct() {
@@ -54,8 +56,8 @@ export default function ProductDetails() {
   if (!product) {
     return (
       <div className="text-center py-24">
-        <h2 className="text-2xl font-semibold mb-4">Product not found</h2>
-        <Link to="/" className="text-neutral-500 hover:text-neutral-900 underline">Return to home</Link>
+        <h2 className="text-2xl font-semibold mb-4">{t('product.notFound')}</h2>
+        <Link to="/" className="text-neutral-500 hover:text-neutral-900 underline">{t('product.returnHome')}</Link>
       </div>
     );
   }
@@ -65,7 +67,7 @@ export default function ProductDetails() {
   return (
     <div className="max-w-5xl mx-auto py-8">
       <Link to="/" className="inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-900 mb-8 transition-colors">
-        <ArrowLeft className="w-4 h-4" /> Back to products
+        <ArrowLeft className="w-4 h-4 rtl:rotate-180" /> {t('product.backToProducts')}
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
@@ -79,7 +81,7 @@ export default function ProductDetails() {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-neutral-400">
-              No Image
+              {t('product.noImage')}
             </div>
           )}
         </div>
@@ -105,18 +107,18 @@ export default function ProductDetails() {
               <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600">
                 <Check className="w-3.5 h-3.5" />
               </div>
-              <span>Instant digital download</span>
+              <span>{t('product.instantDownload')}</span>
             </div>
             <div className="flex items-center gap-3 text-neutral-600">
               <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600">
                 <Check className="w-3.5 h-3.5" />
               </div>
-              <span>Lifetime access & updates</span>
+              <span>{t('product.lifetimeAccess')}</span>
             </div>
           </div>
 
           <button className="w-full bg-neutral-900 text-white py-4 rounded-xl font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 text-lg">
-            <Download className="w-5 h-5" /> Purchase Now
+            <Download className="w-5 h-5" /> {t('product.purchaseNow')}
           </button>
         </div>
       </div>

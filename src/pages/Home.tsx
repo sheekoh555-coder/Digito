@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabase';
 import { ArrowRight } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface Product {
   id: string;
@@ -16,6 +17,7 @@ interface Product {
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     async function fetchProducts() {
@@ -46,15 +48,15 @@ export default function Home() {
     <div className="space-y-24 pb-24">
       {/* Hero Section */}
       <section className="text-center pt-16 pb-8">
-        <h1 className="text-5xl md:text-7xl font-semibold tracking-tighter text-neutral-900 mb-6">
-          Digital excellence,<br />delivered instantly.
+        <h1 className="text-5xl md:text-7xl font-semibold tracking-tighter text-neutral-900 mb-6 whitespace-pre-line">
+          {t('home.heroTitle')}
         </h1>
         <p className="text-lg md:text-xl text-neutral-500 max-w-2xl mx-auto mb-10 font-light">
-          Discover premium digital assets, tools, and resources designed to elevate your creative workflow.
+          {t('home.heroSubtitle')}
         </p>
         <div className="flex justify-center gap-4">
           <button className="bg-neutral-900 text-white px-8 py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
-            Explore Collection
+            {t('home.explore')}
           </button>
         </div>
       </section>
@@ -62,9 +64,9 @@ export default function Home() {
       {/* Products Grid */}
       <section>
         <div className="flex justify-between items-end mb-12">
-          <h2 className="text-3xl font-semibold tracking-tight">Latest Arrivals</h2>
+          <h2 className="text-3xl font-semibold tracking-tight">{t('home.latestArrivals')}</h2>
           <Link to="/" className="text-neutral-500 hover:text-neutral-900 font-medium flex items-center gap-1 transition-colors">
-            View all <ArrowRight className="w-4 h-4" />
+            {t('home.viewAll')} <ArrowRight className="w-4 h-4 rtl:rotate-180" />
           </Link>
         </div>
 
@@ -102,7 +104,7 @@ export default function Home() {
                       {product.title}
                     </h3>
                     <p className="text-xs text-neutral-400 mt-1">
-                      Sold by: {(product as any).profiles?.full_name || (product as any).profiles?.username || (product as any).profiles?.email || 'Verified Seller'}
+                      {t('home.soldBy')} {(product as any).profiles?.full_name || (product as any).profiles?.username || (product as any).profiles?.email || 'Verified Seller'}
                     </p>
                     <p className="text-sm text-neutral-500 mt-2 line-clamp-1">{product.description}</p>
                   </div>
@@ -113,7 +115,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="text-center py-24 bg-neutral-50 rounded-3xl border border-neutral-100">
-            <p className="text-neutral-500">No products found. Add some from the admin panel.</p>
+            <p className="text-neutral-500">{t('home.noProducts')}</p>
           </div>
         )}
       </section>

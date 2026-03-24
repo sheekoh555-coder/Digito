@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Auth() {
   const [loading, setLoading] = useState(false);
@@ -10,6 +11,7 @@ export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -34,7 +36,7 @@ export default function Auth() {
           console.error('Sign Up Error:', error);
           throw error;
         }
-        alert('Check your email for the confirmation link!');
+        alert(t('auth.checkEmail'));
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -61,10 +63,10 @@ export default function Auth() {
           <span className="text-white font-bold text-2xl leading-none">D</span>
         </div>
         <h1 className="text-2xl font-semibold tracking-tight mb-2 text-center">
-          {isSignUp ? 'Create an account' : 'Welcome back'}
+          {isSignUp ? t('auth.createAccount') : t('auth.welcomeBack')}
         </h1>
         <p className="text-neutral-500 mb-8 text-center">
-          {isSignUp ? 'Sign up to start purchasing digital products.' : 'Sign in to access your digital purchases.'}
+          {isSignUp ? t('auth.signUpDesc') : t('auth.signInDesc')}
         </p>
         
         <form onSubmit={handleAuth} className="space-y-4">
@@ -76,7 +78,7 @@ export default function Auth() {
           
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-1.5">
-              Email
+              {t('auth.email')}
             </label>
             <input
               type="email"
@@ -91,7 +93,7 @@ export default function Auth() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-1.5">
-              Password
+              {t('auth.password')}
             </label>
             <input
               type="password"
@@ -109,7 +111,7 @@ export default function Auth() {
             disabled={loading}
             className="w-full bg-neutral-900 text-white py-3.5 rounded-xl font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 mt-2"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isSignUp ? 'Sign Up' : 'Sign In')}
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isSignUp ? t('auth.signUp') : t('auth.signIn'))}
           </button>
         </form>
 
@@ -119,7 +121,7 @@ export default function Auth() {
             onClick={() => setIsSignUp(!isSignUp)}
             className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
           >
-            {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+            {isSignUp ? t('auth.alreadyHaveAccount') : t('auth.dontHaveAccount')}
           </button>
         </div>
       </div>

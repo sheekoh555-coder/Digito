@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { Loader2, DollarSign, TrendingUp, Wallet, ArrowLeft } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
   BarChart,
   Bar,
@@ -17,6 +18,7 @@ export default function AdminCommissions() {
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
   const [orders, setOrders] = useState<any[]>([]);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const checkAdminAndFetch = async () => {
@@ -137,7 +139,7 @@ export default function AdminCommissions() {
           <ArrowLeft className="w-5 h-5 text-neutral-600" />
         </Link>
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Commission Dashboard</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">{t('admin.commissionDashboard')}</h1>
           <p className="text-neutral-500 mt-1">Track marketplace sales, platform fees, and seller payouts.</p>
         </div>
       </div>
@@ -149,7 +151,7 @@ export default function AdminCommissions() {
             <TrendingUp className="w-7 h-7" />
           </div>
           <div>
-            <p className="text-sm font-medium text-neutral-500 mb-1">Total Marketplace Sales</p>
+            <p className="text-sm font-medium text-neutral-500 mb-1">{t('admin.totalSales')}</p>
             <p className="text-3xl font-semibold tracking-tight">${totalSales.toFixed(2)}</p>
           </div>
         </div>
@@ -159,7 +161,7 @@ export default function AdminCommissions() {
             <DollarSign className="w-7 h-7" />
           </div>
           <div>
-            <p className="text-sm font-medium text-neutral-500 mb-1">Total Platform Profit (10%)</p>
+            <p className="text-sm font-medium text-neutral-500 mb-1">{t('admin.platformProfit')}</p>
             <p className="text-3xl font-semibold tracking-tight">${platformProfit.toFixed(2)}</p>
           </div>
         </div>
@@ -169,7 +171,7 @@ export default function AdminCommissions() {
             <Wallet className="w-7 h-7" />
           </div>
           <div>
-            <p className="text-sm font-medium text-neutral-500 mb-1">Net Seller Payouts (90%)</p>
+            <p className="text-sm font-medium text-neutral-500 mb-1">{t('admin.sellerPayouts')}</p>
             <p className="text-3xl font-semibold tracking-tight">${sellerPayouts.toFixed(2)}</p>
           </div>
         </div>
@@ -177,7 +179,7 @@ export default function AdminCommissions() {
 
       {/* Chart Section */}
       <div className="bg-white p-8 rounded-3xl border border-neutral-200 shadow-sm mb-10">
-        <h2 className="text-lg font-semibold mb-6">Sales Overview</h2>
+        <h2 className="text-lg font-semibold mb-6">{t('admin.salesOverview')}</h2>
         <div className="h-72 w-full">
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
@@ -204,17 +206,17 @@ export default function AdminCommissions() {
       {/* Orders Table */}
       <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-neutral-200">
-          <h2 className="text-lg font-semibold">Recent Transactions</h2>
+          <h2 className="text-lg font-semibold">{t('admin.recentTransactions')}</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-neutral-50 text-neutral-500 text-sm">
-                <th className="px-6 py-4 font-medium">Order ID</th>
-                <th className="px-6 py-4 font-medium">Product Name</th>
-                <th className="px-6 py-4 font-medium">Seller Name</th>
-                <th className="px-6 py-4 font-medium text-right">Sale Price</th>
-                <th className="px-6 py-4 font-medium text-right">Platform Fee (10%)</th>
+                <th className="px-6 py-4 font-medium">{t('admin.orderId')}</th>
+                <th className="px-6 py-4 font-medium">{t('admin.productName')}</th>
+                <th className="px-6 py-4 font-medium">{t('admin.sellerName')}</th>
+                <th className="px-6 py-4 font-medium text-right">{t('admin.salePrice')}</th>
+                <th className="px-6 py-4 font-medium text-right">{t('admin.platformFee')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">

@@ -1,12 +1,18 @@
 import { Link } from 'react-router-dom';
-import { ShoppingBag, User, Shield } from 'lucide-react';
+import { ShoppingBag, User, Shield, Globe } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Navbar() {
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSeller, setIsSeller] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'ar' : 'en');
+  };
 
   useEffect(() => {
     const checkUserRoles = async (userId: string) => {
@@ -56,16 +62,23 @@ export default function Navbar() {
             <span className="font-semibold text-xl tracking-tight">Digito</span>
           </Link>
           <div className="flex items-center gap-6">
+            <button 
+              onClick={toggleLanguage}
+              className="text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-2 text-sm font-medium"
+            >
+              <Globe className="w-4 h-4" />
+              <span className="hidden sm:inline">{language === 'en' ? 'العربية' : 'English'}</span>
+            </button>
             {isAdmin && (
               <Link to="/admin" className="bg-neutral-900 text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-colors flex items-center gap-2 text-sm font-medium">
                 <Shield className="w-4 h-4" />
-                <span>Admin</span>
+                <span>{t('nav.admin')}</span>
               </Link>
             )}
             {isSeller && (
               <Link to="/seller" className="text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-2 text-sm font-medium">
                 <ShoppingBag className="w-4 h-4" />
-                <span className="hidden sm:inline">Seller</span>
+                <span className="hidden sm:inline">{t('nav.seller')}</span>
               </Link>
             )}
             {user ? (
@@ -76,7 +89,7 @@ export default function Navbar() {
             ) : (
               <Link to="/auth" className="text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-2 text-sm font-medium">
                 <User className="w-4 h-4" />
-                <span className="hidden sm:inline">Sign In</span>
+                <span className="hidden sm:inline">{t('nav.login')}</span>
               </Link>
             )}
             <button className="text-neutral-500 hover:text-neutral-900 transition-colors relative">
