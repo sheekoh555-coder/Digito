@@ -72,9 +72,6 @@ export default function SellerDashboard() {
     setSuccess(false);
 
     try {
-      // Attempt to reload schema cache (if RPC is configured) to handle recent SQL migrations
-      await supabase.rpc('reload_schema').catch(() => {});
-
       const { error: insertError } = await supabase
         .from('products')
         .insert([
@@ -86,8 +83,7 @@ export default function SellerDashboard() {
             seller_id: userId,
             status: 'pending'
           }
-        ])
-        .select('id, title, description, price, image_url, seller_id, status');
+        ]);
 
       if (insertError) throw insertError;
 

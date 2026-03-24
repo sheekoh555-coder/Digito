@@ -84,9 +84,6 @@ export default function Admin() {
     setSuccess(false);
 
     try {
-      // Attempt to reload schema cache (if RPC is configured) to handle recent SQL migrations
-      await supabase.rpc('reload_schema').catch(() => {});
-
       const { error: insertError } = await supabase
         .from('products')
         .insert([
@@ -97,8 +94,7 @@ export default function Admin() {
             image_url: formData.image_url || `https://picsum.photos/seed/${encodeURIComponent(formData.title)}/800/600`,
             status: 'approved' // Admin added products are auto-approved
           }
-        ])
-        .select('id, title, description, price, image_url, status');
+        ]);
 
       if (insertError) throw insertError;
 
