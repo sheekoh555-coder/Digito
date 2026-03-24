@@ -8,6 +8,7 @@ export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [purchasing, setPurchasing] = useState(false);
   const { t, formatCurrency } = useLanguage();
 
   useEffect(() => {
@@ -28,7 +29,8 @@ export default function ProductDetails() {
           title: 'Premium Digital Asset',
           description: 'This is a high-quality digital product designed to elevate your workflow. Includes lifetime updates and instant download.',
           price: 49.99,
-          image_url: `https://picsum.photos/seed/${id}/800/600`
+          image_url: `https://picsum.photos/seed/${id}/800/600`,
+          seller_id: 'mock-seller-id'
         });
       }
       setLoading(false);
@@ -36,6 +38,49 @@ export default function ProductDetails() {
 
     fetchProduct();
   }, [id]);
+
+  const handlePurchase = async () => {
+    if (!product) return;
+    
+    try {
+      setPurchasing(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Determine currency based on language or formatCurrency logic
+      // Assuming Arabic uses EGP and English uses USD
+      const currency = formatCurrency(1).includes('ج.م') ? 'egp' : 'usd';
+      
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          price: product.price,
+          title: product.title,
+          userId: user?.id || 'anonymous',
+          origin: window.location.origin,
+          currency
+        }),
+      });
+
+      const session = await response.json();
+      
+      if (session.error) {
+        throw new Error(session.error);
+      }
+
+      if (session.url) {
+        window.location.href = session.url;
+      }
+    } catch (error) {
+      console.error('Error initiating checkout:', error);
+      alert('Failed to initiate checkout. Please try again.');
+    } finally {
+      setPurchasing(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -117,8 +162,17 @@ export default function ProductDetails() {
             </div>
           </div>
 
-          <button className="w-full bg-neutral-900 text-white py-4 rounded-xl font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 text-lg">
-            <Download className="w-5 h-5" /> {t('product.purchaseNow')}
+          <button 
+            onClick={handlePurchase}
+            disabled={purchasing}
+            className="w-full bg-neutral-900 text-white py-4 rounded-xl font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 text-lg disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {purchasing ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <Download className="w-5 h-5" />
+            )}
+            {purchasing ? t('product.processing') || 'Processing...' : t('product.purchaseNow')}
           </button>
         </div>
       </div>

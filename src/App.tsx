@@ -12,6 +12,7 @@ import Auth from './pages/Auth';
 import ProductDetails from './pages/ProductDetails';
 import Dashboard from './pages/Dashboard';
 import SellerDashboard from './pages/SellerDashboard';
+import Success from './pages/Success';
 import Navbar from './components/Navbar';
 import { LanguageProvider } from './contexts/LanguageContext';
 
@@ -25,6 +26,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/success" element={<Success />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/seller" element={<SellerDashboard />} />
               <Route path="/admin" element={<Admin />} />
