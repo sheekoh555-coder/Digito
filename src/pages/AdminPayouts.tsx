@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
-import { Loader2, Check, X, ArrowLeft, DollarSign } from 'lucide-react';
+import { Loader2, Check, X, ArrowLeft, Banknote } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -9,7 +9,7 @@ export default function AdminPayouts() {
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
   const [payouts, setPayouts] = useState<any[]>([]);
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, formatCurrency } = useLanguage();
 
   useEffect(() => {
     const checkAdminAndFetch = async () => {
@@ -146,10 +146,10 @@ export default function AdminPayouts() {
                 <div key={payout.id} className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center flex-shrink-0">
-                      <DollarSign className="w-6 h-6" />
+                      <Banknote className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg">${parseFloat(payout.amount).toFixed(2)}</h3>
+                      <h3 className="font-semibold text-lg">{formatCurrency(parseFloat(payout.amount))}</h3>
                       <p className="text-sm font-medium text-neutral-900 mt-1">
                         {payout.profiles?.full_name || payout.profiles?.username || payout.profiles?.email || 'Unknown Seller'}
                       </p>
@@ -198,7 +198,7 @@ export default function AdminPayouts() {
                       <p className="font-medium text-neutral-900">
                         {payout.profiles?.full_name || payout.profiles?.username || 'Seller'}
                       </p>
-                      <p className="font-semibold">${parseFloat(payout.amount).toFixed(2)}</p>
+                      <p className="font-semibold">{formatCurrency(parseFloat(payout.amount))}</p>
                     </div>
                     <div className="flex justify-between items-center text-xs">
                       <p className="text-neutral-500">{new Date(payout.created_at).toLocaleDateString()}</p>

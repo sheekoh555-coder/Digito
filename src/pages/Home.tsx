@@ -17,7 +17,7 @@ interface Product {
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const { t } = useLanguage();
+  const { t, formatCurrency } = useLanguage();
 
   useEffect(() => {
     async function fetchProducts() {
@@ -108,7 +108,7 @@ export default function Home() {
                     </p>
                     <p className="text-sm text-neutral-500 mt-2 line-clamp-1">{product.description}</p>
                   </div>
-                  <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
+                  <span className="text-lg font-semibold">{formatCurrency(product.price)}</span>
                 </div>
               </Link>
             ))}

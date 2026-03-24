@@ -8,7 +8,7 @@ export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const { t } = useLanguage();
+  const { t, formatCurrency } = useLanguage();
 
   useEffect(() => {
     async function fetchProduct() {
@@ -95,7 +95,7 @@ export default function ProductDetails() {
             {product.title}
           </h1>
           <div className="text-3xl font-light text-neutral-900 mb-8">
-            ${product.price.toFixed(2)}
+            {formatCurrency(product.price)}
           </div>
           
           <p className="text-lg text-neutral-600 mb-10 leading-relaxed">

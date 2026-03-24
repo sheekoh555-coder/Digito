@@ -11,7 +11,7 @@ export default function Admin() {
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
   const [pendingProducts, setPendingProducts] = useState<any[]>([]);
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, formatCurrency } = useLanguage();
   
   const [formData, setFormData] = useState({
     title: '',
@@ -192,7 +192,7 @@ export default function Admin() {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label htmlFor="price" className="block text-sm font-medium text-neutral-700 mb-2">
-              {t('dashboard.price')} ($)
+              {t('dashboard.price')}
             </label>
             <input
               type="number"
@@ -258,7 +258,7 @@ export default function Admin() {
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium text-neutral-900 truncate">{product.title}</h3>
                     <p className="text-sm text-neutral-500 mt-1 line-clamp-2">{product.description}</p>
-                    <p className="text-sm font-semibold text-neutral-900 mt-2">${product.price.toFixed(2)}</p>
+                    <p className="text-sm font-semibold text-neutral-900 mt-2">{formatCurrency(product.price)}</p>
                   </div>
                 </div>
                 <div className="flex gap-2 pt-2 border-t border-neutral-100">

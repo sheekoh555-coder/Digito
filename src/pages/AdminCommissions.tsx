@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
-import { Loader2, DollarSign, TrendingUp, Wallet, ArrowLeft } from 'lucide-react';
+import { Loader2, Banknote, TrendingUp, Wallet, ArrowLeft } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import {
@@ -18,7 +18,7 @@ export default function AdminCommissions() {
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
   const [orders, setOrders] = useState<any[]>([]);
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, formatCurrency } = useLanguage();
 
   useEffect(() => {
     const checkAdminAndFetch = async () => {
@@ -152,17 +152,17 @@ export default function AdminCommissions() {
           </div>
           <div>
             <p className="text-sm font-medium text-neutral-500 mb-1">{t('admin.totalSales')}</p>
-            <p className="text-3xl font-semibold tracking-tight">${totalSales.toFixed(2)}</p>
+            <p className="text-3xl font-semibold tracking-tight">{formatCurrency(totalSales)}</p>
           </div>
         </div>
         
         <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm flex items-center gap-5">
           <div className="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center flex-shrink-0">
-            <DollarSign className="w-7 h-7" />
+            <Banknote className="w-7 h-7" />
           </div>
           <div>
             <p className="text-sm font-medium text-neutral-500 mb-1">{t('admin.platformProfit')}</p>
-            <p className="text-3xl font-semibold tracking-tight">${platformProfit.toFixed(2)}</p>
+            <p className="text-3xl font-semibold tracking-tight">{formatCurrency(platformProfit)}</p>
           </div>
         </div>
         
@@ -172,7 +172,7 @@ export default function AdminCommissions() {
           </div>
           <div>
             <p className="text-sm font-medium text-neutral-500 mb-1">{t('admin.sellerPayouts')}</p>
-            <p className="text-3xl font-semibold tracking-tight">${sellerPayouts.toFixed(2)}</p>
+            <p className="text-3xl font-semibold tracking-tight">{formatCurrency(sellerPayouts)}</p>
           </div>
         </div>
       </div>
@@ -186,11 +186,11 @@ export default function AdminCommissions() {
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e5e5" />
                 <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#737373', fontSize: 12 }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#737373', fontSize: 12 }} tickFormatter={(value) => `$${value}`} dx={-10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#737373', fontSize: 12 }} tickFormatter={(value) => formatCurrency(value)} dx={-10} />
                 <Tooltip 
                   cursor={{ fill: '#f5f5f5' }}
                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
-                  formatter={(value: number) => [`$${value.toFixed(2)}`, 'Sales']}
+                  formatter={(value: number) => [formatCurrency(value), 'Sales']}
                 />
                 <Bar dataKey="sales" fill="#171717" radius={[4, 4, 0, 0]} maxBarSize={50} />
               </BarChart>
@@ -239,10 +239,10 @@ export default function AdminCommissions() {
                         {sellerName}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-neutral-900 text-right">
-                        ${price.toFixed(2)}
+                        {formatCurrency(price)}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-green-600 text-right">
-                        ${fee.toFixed(2)}
+                        {formatCurrency(fee)}
                       </td>
                     </tr>
                   );

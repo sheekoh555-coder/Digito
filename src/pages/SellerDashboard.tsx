@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
-import { Plus, Loader2, Clock, CheckCircle, XCircle, Wallet, ArrowRight, DollarSign } from 'lucide-react';
+import { Plus, Loader2, Clock, CheckCircle, XCircle, Wallet, ArrowRight, Banknote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -25,7 +25,7 @@ export default function SellerDashboard() {
   });
 
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, formatCurrency } = useLanguage();
   
   const [formData, setFormData] = useState({
     title: '',
@@ -251,7 +251,7 @@ export default function SellerDashboard() {
               </div>
               <div>
                 <h2 className="text-lg font-semibold">{t('dashboard.availableBalance')}</h2>
-                <p className="text-2xl font-bold tracking-tight text-neutral-900">${availableBalance.toFixed(2)}</p>
+                <p className="text-2xl font-bold tracking-tight text-neutral-900">{formatCurrency(availableBalance)}</p>
               </div>
             </div>
 
@@ -359,7 +359,7 @@ export default function SellerDashboard() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-neutral-500 mb-1">{t('dashboard.price')} ($)</label>
+                  <label className="block text-xs font-medium text-neutral-500 mb-1">{t('dashboard.price')}</label>
                   <input
                     type="number"
                     required
@@ -415,7 +415,7 @@ export default function SellerDashboard() {
                           payout.status === 'rejected' ? 'bg-red-50 text-red-600' : 
                           'bg-amber-50 text-amber-600'
                         }`}>
-                          <DollarSign className="w-5 h-5" />
+                          <Banknote className="w-5 h-5" />
                         </div>
                         <div>
                           <p className="font-medium text-sm text-neutral-900 capitalize">{payout.method}</p>
@@ -423,7 +423,7 @@ export default function SellerDashboard() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-neutral-900">${parseFloat(payout.amount).toFixed(2)}</p>
+                        <p className="font-semibold text-neutral-900">{formatCurrency(parseFloat(payout.amount))}</p>
                         <p className={`text-xs font-medium capitalize ${
                           payout.status === 'completed' ? 'text-green-600' : 
                           payout.status === 'rejected' ? 'text-red-600' : 
@@ -458,9 +458,9 @@ export default function SellerDashboard() {
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium text-neutral-900 truncate">{product.title}</h3>
                       <p className="text-sm text-neutral-500 mt-1">
-                        {t('dashboard.price')}: ${product.price.toFixed(2)} 
+                        {t('dashboard.price')}: {formatCurrency(product.price)} 
                         <span className="text-green-600 font-medium mx-3 bg-green-50 px-2 py-0.5 rounded-md">
-                          {t('seller.net')} ${(product.price * 0.9).toFixed(2)}
+                          {t('seller.net')} {formatCurrency(product.price * 0.9)}
                         </span>
                       </p>
                     </div>

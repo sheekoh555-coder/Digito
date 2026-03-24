@@ -6,6 +6,7 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
+  formatCurrency: (amount: number) => string;
 }
 
 const translations: Record<Language, Record<string, string>> = {
@@ -21,7 +22,7 @@ const translations: Record<Language, Record<string, string>> = {
     'dashboard.commission': 'Commission',
     'dashboard.availableBalance': 'Available Balance',
     'dashboard.requestWithdrawal': 'Request Withdrawal',
-    'dashboard.amount': 'Amount ($)',
+    'dashboard.amount': 'Amount',
     'dashboard.method': 'Method',
     'dashboard.accountDetails': 'Account Details',
     'dashboard.withdrawFunds': 'Withdraw Funds',
@@ -110,7 +111,7 @@ const translations: Record<Language, Record<string, string>> = {
     'dashboard.commission': 'العمولة',
     'dashboard.availableBalance': 'الرصيد المتاح',
     'dashboard.requestWithdrawal': 'طلب سحب',
-    'dashboard.amount': 'المبلغ ($)',
+    'dashboard.amount': 'المبلغ',
     'dashboard.method': 'الطريقة',
     'dashboard.accountDetails': 'تفاصيل الحساب',
     'dashboard.withdrawFunds': 'سحب الأموال',
@@ -211,8 +212,15 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return translations[language][key] || key;
   };
 
+  const formatCurrency = (amount: number): string => {
+    if (language === 'ar') {
+      return `${amount.toFixed(2)} ج.م`;
+    }
+    return `$${amount.toFixed(2)}`;
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, formatCurrency }}>
       {children}
     </LanguageContext.Provider>
   );
