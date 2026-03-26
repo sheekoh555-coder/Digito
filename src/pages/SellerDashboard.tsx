@@ -232,7 +232,11 @@ export default function SellerDashboard() {
         });
 
       if (uploadError) {
-        throw new Error(`File upload failed: ${uploadError.message}`);
+        console.error("Storage upload error:", uploadError);
+        if (uploadError.message.includes('row-level security') || uploadError.message.includes('Access denied') || uploadError.message.includes('new row violates')) {
+          throw new Error(t('seller.uploadErrorRLS') || 'Permission error during file upload. Please check RLS settings.');
+        }
+        throw new Error(`${t('seller.uploadFailed') || 'File upload failed:'} ${uploadError.message}`);
       }
 
       setUploadProgress(70);
@@ -252,7 +256,13 @@ export default function SellerDashboard() {
           }
         ]);
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error("Database insert error:", insertError);
+        if (insertError.message.includes('row-level security') || insertError.message.includes('new row violates')) {
+          throw new Error(t('seller.insertErrorRLS') || 'Permission error saving product data. Please check RLS settings.');
+        }
+        throw new Error(`${t('seller.insertFailed') || 'Failed to save product:'} ${insertError.message}`);
+      }
 
       setUploadProgress(100);
       setSuccess(true);
@@ -266,7 +276,7 @@ export default function SellerDashboard() {
       fetchMyProducts(userId);
     } catch (err: any) {
       console.error('Submit error:', err);
-      setError(err.message || 'Failed to submit product');
+      setError(err.message || t('seller.genericError') || 'Failed to submit product');
     } finally {
       setLoading(false);
       setTimeout(() => setUploadProgress(0), 2000);
