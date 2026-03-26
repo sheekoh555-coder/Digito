@@ -117,8 +117,8 @@ async function startServer() {
           },
         ],
         mode: 'payment',
-        success_url: `${origin || process.env.APP_URL || 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin || process.env.APP_URL || 'http://localhost:3000'}/product/${productId}`,
+        success_url: `https://digito-ruby.vercel.app/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `https://digito-ruby.vercel.app/cancel`,
         metadata: {
           productId,
           userId: userId || 'anonymous',
@@ -145,6 +145,7 @@ async function startServer() {
         const productId = session.metadata?.productId;
         const userId = session.metadata?.userId;
         const amount = session.amount_total ? session.amount_total / 100 : 0;
+        let downloadUrl = null;
 
         if (productId) {
           // Check if order already exists for this session
@@ -174,9 +175,30 @@ async function startServer() {
               console.error('Error inserting order during verification:', error);
             }
           }
+
+          // Generate signed URL for the product file
+          const { data: productData } = await supabase
+            .from('products')
+            .select('file_url')
+            .eq('id', productId)
+            .single();
+
+          if (productData?.file_url) {
+            // Create a signed URL valid for 24 hours (86400 seconds)
+            const { data: signedUrlData, error: signedUrlError } = await supabase
+              .storage
+              .from('product-files')
+              .createSignedUrl(productData.file_url, 86400);
+
+            if (signedUrlError) {
+              console.error('Error generating signed URL:', signedUrlError);
+            } else if (signedUrlData) {
+              downloadUrl = signedUrlData.signedUrl;
+            }
+          }
         }
         
-        return res.json({ success: true, session });
+        return res.json({ success: true, session, downloadUrl });
       } else {
         return res.json({ success: false, status: session.payment_status });
       }

@@ -13,6 +13,8 @@ import ProductDetails from './pages/ProductDetails';
 import Dashboard from './pages/Dashboard';
 import SellerDashboard from './pages/SellerDashboard';
 import Success from './pages/Success';
+import Cancel from './pages/Cancel';
+import Settings from './pages/Settings';
 import Navbar from './components/Navbar';
 import { LanguageProvider } from './contexts/LanguageContext';
 
@@ -27,7 +29,9 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/success" element={<Success />} />
+              <Route path="/cancel" element={<Cancel />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/seller" element={<SellerDashboard />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/commissions" element={<AdminCommissions />} />
