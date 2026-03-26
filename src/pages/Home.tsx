@@ -23,7 +23,7 @@ export default function Home() {
     async function fetchProducts() {
       const { data, error } = await supabase
         .from('products')
-        .select('id, title, description, price, image_url, status, seller_id, created_at, profiles(full_name, username, email)')
+        .select('*')
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
       

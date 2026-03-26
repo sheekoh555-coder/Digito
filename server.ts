@@ -8,7 +8,18 @@ import cors from 'cors';
 
 dotenv.config();
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+let stripeClient: Stripe | null = null;
+
+function getStripe(): Stripe {
+  if (!stripeClient) {
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) {
+      throw new Error('STRIPE_SECRET_KEY environment variable is required');
+    }
+    stripeClient = new Stripe(key);
+  }
+  return stripeClient;
+}
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
@@ -28,6 +39,7 @@ async function startServer() {
     let event;
 
     try {
+      const stripe = getStripe();
       if (endpointSecret) {
         event = stripe.webhooks.constructEvent(req.body, sig as string, endpointSecret);
       } else {
@@ -102,6 +114,7 @@ async function startServer() {
         return res.status(400).json({ error: 'Missing required fields' });
       }
 
+      const stripe = getStripe();
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -117,8 +130,8 @@ async function startServer() {
           },
         ],
         mode: 'payment',
-        success_url: `https://digito-ruby.vercel.app/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `https://digito-ruby.vercel.app/cancel`,
+        success_url: `${origin || 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin || 'http://localhost:3000'}/cancel`,
         metadata: {
           productId,
           userId: userId || 'anonymous',
@@ -139,6 +152,7 @@ async function startServer() {
         return res.status(400).json({ error: 'Missing session_id' });
       }
 
+      const stripe = getStripe();
       const session = await stripe.checkout.sessions.retrieve(session_id);
       
       if (session.payment_status === 'paid') {

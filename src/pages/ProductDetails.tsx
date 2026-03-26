@@ -16,7 +16,7 @@ export default function ProductDetails() {
       if (!id) return;
       const { data, error } = await supabase
         .from('products')
-        .select('id, title, description, price, image_url, status, seller_id, created_at, profiles(full_name, username, email)')
+        .select('*')
         .eq('id', id)
         .single();
       
