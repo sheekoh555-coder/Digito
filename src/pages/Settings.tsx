@@ -78,47 +78,47 @@ export default function Settings() {
   if (loading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-neutral-900" />
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-12">
-      <div className="mb-10">
-        <h1 className="text-3xl font-semibold tracking-tight mb-2">{t('settings.title') || 'Settings'}</h1>
-        <p className="text-neutral-500">{t('settings.desc') || 'Manage your account settings and profile.'}</p>
+    <div className="max-w-2xl mx-auto py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900 mb-2">{t('settings.title') || 'Settings'}</h1>
+        <p className="text-slate-500">{t('settings.desc') || 'Manage your account settings and profile.'}</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl border border-neutral-200 shadow-sm">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
         {error && (
-          <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium">
+          <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium border border-red-100">
             {error}
           </div>
         )}
         
         {success && (
-          <div className="p-4 bg-green-50 text-green-600 rounded-xl text-sm font-medium">
+          <div className="p-4 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-medium border border-emerald-100">
             {t('settings.success') || 'Profile updated successfully!'}
           </div>
         )}
 
         <div className="flex items-center gap-6 mb-8">
-          <div className="w-24 h-24 bg-neutral-100 rounded-full overflow-hidden flex-shrink-0 border border-neutral-200 flex items-center justify-center">
+          <div className="w-24 h-24 bg-slate-100 rounded-full overflow-hidden flex-shrink-0 border border-slate-200 flex items-center justify-center">
             {formData.avatar_url ? (
               <img src={formData.avatar_url} alt={formData.full_name} className="w-full h-full object-cover" />
             ) : (
-              <User className="w-10 h-10 text-neutral-400" />
+              <User className="w-10 h-10 text-slate-400" />
             )}
           </div>
           <div className="flex-1">
-            <label htmlFor="avatar_url" className="block text-sm font-medium text-neutral-700 mb-2 flex items-center gap-2">
+            <label htmlFor="avatar_url" className="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
               <ImageIcon className="w-4 h-4" /> {t('settings.avatarUrl') || 'Profile Picture URL'}
             </label>
             <input
               type="url"
               id="avatar_url"
-              className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               placeholder="https://..."
               value={formData.avatar_url}
               onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
@@ -127,13 +127,13 @@ export default function Settings() {
         </div>
 
         <div>
-          <label htmlFor="full_name" className="block text-sm font-medium text-neutral-700 mb-2">
+          <label htmlFor="full_name" className="block text-sm font-medium text-slate-700 mb-2">
             {t('settings.fullName') || 'Full Name'}
           </label>
           <input
             type="text"
             id="full_name"
-            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
             placeholder="John Doe"
             value={formData.full_name}
             onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
@@ -143,7 +143,7 @@ export default function Settings() {
         <button
           type="submit"
           disabled={saving}
-          className="w-full bg-neutral-900 text-white py-4 rounded-xl font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 shadow-sm"
         >
           {saving ? (
             <Loader2 className="w-5 h-5 animate-spin" />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
-import { Plus, Loader2, Clock, CheckCircle, XCircle, Wallet, ArrowRight, Banknote } from 'lucide-react';
+import { Plus, Loader2, Clock, CheckCircle, XCircle, Wallet, ArrowRight, Banknote, Package, Edit2, Trash2, ShieldAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -342,45 +342,48 @@ export default function SellerDashboard() {
   if (isCheckingSeller) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-neutral-900" />
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-12">
-      <div className="mb-10">
-        <h1 className="text-3xl font-semibold tracking-tight mb-2">{t('nav.seller')}</h1>
-        <p className="text-neutral-500">{t('seller.manage')}</p>
+    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <div className="mb-10 relative z-10">
+        <h1 className="text-4xl font-bold tracking-tight mb-3 text-slate-900">{t('nav.seller')}</h1>
+        <p className="text-slate-500 text-lg font-medium">{t('seller.manage')}</p>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Banknote className="w-6 h-6" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 perspective-1000">
+        <div className="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 flex items-center gap-5 transform-gpu transition-all duration-500 hover:-translate-y-1 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-indigo-500/10 transition-colors"></div>
+          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md transform-gpu group-hover:scale-110 transition-transform duration-300 relative z-10">
+            <Banknote className="w-8 h-8" />
           </div>
-          <div>
-            <p className="text-sm font-medium text-neutral-500">{t('seller.totalSales') || 'Total Sales'}</p>
-            <p className="text-2xl font-bold text-neutral-900">{formatCurrency(totalSalesAmount)}</p>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Wallet className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-neutral-500">{t('dashboard.availableBalance')}</p>
-            <p className="text-2xl font-bold text-neutral-900">{formatCurrency(availableBalance)}</p>
+          <div className="relative z-10">
+            <p className="text-sm font-semibold text-slate-500 mb-1 uppercase tracking-wider">{t('seller.totalSales') || 'Total Sales'}</p>
+            <p className="text-3xl font-black text-slate-900">{formatCurrency(totalSalesAmount)}</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Plus className="w-6 h-6" />
+        <div className="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 flex items-center gap-5 transform-gpu transition-all duration-500 hover:-translate-y-1 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-emerald-500/10 transition-colors"></div>
+          <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 text-white rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md transform-gpu group-hover:scale-110 transition-transform duration-300 relative z-10">
+            <Wallet className="w-8 h-8" />
           </div>
-          <div>
-            <p className="text-sm font-medium text-neutral-500">{t('seller.activeProducts') || 'Active Products'}</p>
-            <p className="text-2xl font-bold text-neutral-900">{myProducts.filter(p => p.status === 'approved').length}</p>
+          <div className="relative z-10">
+            <p className="text-sm font-semibold text-slate-500 mb-1 uppercase tracking-wider">{t('dashboard.availableBalance')}</p>
+            <p className="text-3xl font-black text-slate-900">{formatCurrency(availableBalance)}</p>
+          </div>
+        </div>
+        <div className="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-xl hover:shadow-blue-500/10 flex items-center gap-5 transform-gpu transition-all duration-500 hover:-translate-y-1 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-500/10 transition-colors"></div>
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md transform-gpu group-hover:scale-110 transition-transform duration-300 relative z-10">
+            <Package className="w-8 h-8" />
+          </div>
+          <div className="relative z-10">
+            <p className="text-sm font-semibold text-slate-500 mb-1 uppercase tracking-wider">{t('seller.activeProducts') || 'Active Products'}</p>
+            <p className="text-3xl font-black text-slate-900">{myProducts.filter(p => p.status === 'approved').length}</p>
           </div>
         </div>
       </div>
@@ -389,51 +392,59 @@ export default function SellerDashboard() {
         {/* Left Column: Add Product & Withdrawals */}
         <div className="lg:col-span-1 space-y-8">
           {/* Financials / Withdraw Card */}
-          <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-green-50 text-green-600 rounded-xl flex items-center justify-center">
-                <Wallet className="w-5 h-5" />
+          <div className="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-emerald-500/10 transition-colors"></div>
+            <div className="flex items-center gap-4 mb-8 relative z-10">
+              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center border border-emerald-100 shadow-sm">
+                <Wallet className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold">{t('dashboard.availableBalance')}</h2>
-                <p className="text-2xl font-bold tracking-tight text-neutral-900">{formatCurrency(availableBalance)}</p>
+                <h2 className="text-xl font-bold text-slate-900">{t('dashboard.availableBalance')}</h2>
+                <p className="text-3xl font-black tracking-tight text-emerald-600">{formatCurrency(availableBalance)}</p>
               </div>
             </div>
 
-            <form onSubmit={handlePayoutSubmit} className="space-y-4 border-t border-neutral-100 pt-6">
-              <h3 className="font-medium text-sm text-neutral-900">{t('dashboard.requestWithdrawal')}</h3>
+            <form onSubmit={handlePayoutSubmit} className="space-y-4 border-t border-slate-100/50 pt-8 relative z-10">
+              <h3 className="font-bold text-slate-900">{t('dashboard.requestWithdrawal')}</h3>
               
               {payoutError && (
-                <div className="p-3 bg-red-50 text-red-600 rounded-lg text-xs font-medium">
+                <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium border border-red-100 flex items-center gap-2">
+                  <XCircle className="w-4 h-4 shrink-0" />
                   {payoutError}
                 </div>
               )}
               
               {payoutSuccess && (
-                <div className="p-3 bg-green-50 text-green-600 rounded-lg text-xs font-medium">
+                <div className="p-4 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-medium border border-emerald-100 flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 shrink-0" />
                   {t('seller.withdrawalRequested')}
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-medium text-neutral-500 mb-1">{t('dashboard.amount')}</label>
-                <input
-                  type="number"
-                  required
-                  min="1"
-                  step="0.01"
-                  max={availableBalance}
-                  className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 text-sm"
-                  placeholder="0.00"
-                  value={payoutForm.amount}
-                  onChange={(e) => setPayoutForm({ ...payoutForm, amount: e.target.value })}
-                />
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('dashboard.amount')}</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <span className="text-slate-400 font-medium">$</span>
+                  </div>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    step="0.01"
+                    max={availableBalance}
+                    className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm transition-all shadow-sm bg-slate-50/50 hover:bg-white focus:bg-white"
+                    placeholder="0.00"
+                    value={payoutForm.amount}
+                    onChange={(e) => setPayoutForm({ ...payoutForm, amount: e.target.value })}
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-500 mb-1">{t('dashboard.method')}</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('dashboard.method')}</label>
                 <select
-                  className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 text-sm bg-white"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm transition-all shadow-sm bg-slate-50/50 hover:bg-white focus:bg-white appearance-none cursor-pointer"
                   value={payoutForm.method}
                   onChange={(e) => setPayoutForm({ ...payoutForm, method: e.target.value })}
                 >
@@ -444,11 +455,11 @@ export default function SellerDashboard() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-500 mb-1">{t('dashboard.accountDetails')}</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('dashboard.accountDetails')}</label>
                 <input
                   type="text"
                   required
-                  className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm transition-all shadow-sm bg-slate-50/50 hover:bg-white focus:bg-white"
                   placeholder="Email or Account Number"
                   value={payoutForm.details}
                   onChange={(e) => setPayoutForm({ ...payoutForm, details: e.target.value })}
@@ -458,81 +469,102 @@ export default function SellerDashboard() {
               <button
                 type="submit"
                 disabled={payoutLoading || availableBalance <= 0}
-                className="w-full bg-neutral-900 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-3.5 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none mt-2"
               >
-                {payoutLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('dashboard.withdrawFunds')}
+                {payoutLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('dashboard.withdrawFunds')}
               </button>
             </form>
           </div>
 
           {/* Add Product Card */}
-          <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm">
-            <h2 className="text-lg font-semibold mb-4">{t('dashboard.addProduct')}</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-indigo-500/10 transition-colors"></div>
+            <h2 className="text-xl font-bold mb-6 text-slate-900 relative z-10 flex items-center gap-3">
+              <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center border border-indigo-100">
+                <Plus className="w-5 h-5" />
+              </div>
+              {t('dashboard.addProduct')}
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
               {error && (
-                <div className="p-3 bg-red-50 text-red-600 rounded-lg text-xs font-medium">
+                <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium border border-red-100 flex items-center gap-2">
+                  <XCircle className="w-4 h-4 shrink-0" />
                   {error}
                 </div>
               )}
               {success && (
-                <div className="p-3 bg-green-50 text-green-600 rounded-lg text-xs font-medium">
+                <div className="p-4 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-medium border border-emerald-100 flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 shrink-0" />
                   {t('seller.productSubmitted')}
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-medium text-neutral-500 mb-1">{t('dashboard.title')}</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('dashboard.title')}</label>
                 <input
                   type="text"
                   required
-                  className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm transition-all shadow-sm bg-slate-50/50 hover:bg-white focus:bg-white"
                   value={formData.title}
+                  placeholder="e.g. Premium UI Kit"
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-500 mb-1">{t('dashboard.description')}</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('dashboard.description')}</label>
                 <textarea
                   required
-                  rows={2}
-                  className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 text-sm resize-none"
+                  rows={3}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm transition-all shadow-sm bg-slate-50/50 hover:bg-white focus:bg-white resize-none"
                   value={formData.description}
+                  placeholder="Describe your product..."
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-500 mb-1">Digital Product File (ZIP, PDF, etc.)</label>
-                <input
-                  type="file"
-                  id="product_file"
-                  required
-                  className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 text-sm bg-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-neutral-100 file:text-neutral-700 hover:file:bg-neutral-200"
-                  onChange={(e) => setProductFile(e.target.files?.[0] || null)}
-                />
-                <p className="text-[10px] text-neutral-400 mt-1">This file will be securely stored and only accessible to buyers.</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-neutral-500 mb-1">{t('dashboard.price')}</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Digital Product File (ZIP, PDF, etc.)</label>
+                <div className="relative">
                   <input
-                    type="number"
+                    type="file"
+                    id="product_file"
                     required
-                    min="0"
-                    step="0.01"
-                    className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 text-sm"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm transition-all shadow-sm bg-slate-50/50 hover:bg-white focus:bg-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+                    onChange={(e) => setProductFile(e.target.files?.[0] || null)}
                   />
                 </div>
+                <p className="text-xs text-slate-500 mt-2 font-medium flex items-center gap-1">
+                  <ShieldAlert className="w-3 h-3" /> This file will be securely stored and only accessible to buyers.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-medium text-neutral-500 mb-1">{t('dashboard.imageUrl')}</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">{t('dashboard.price')}</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <span className="text-slate-400 font-medium">$</span>
+                    </div>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      step="0.01"
+                      className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm transition-all shadow-sm bg-slate-50/50 hover:bg-white focus:bg-white"
+                      value={formData.price}
+                      placeholder="0.00"
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">{t('dashboard.imageUrl')}</label>
                   <input
                     type="url"
-                    className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900 text-sm"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm transition-all shadow-sm bg-slate-50/50 hover:bg-white focus:bg-white"
                     value={formData.image_url}
+                    placeholder="https://..."
                     onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                   />
                 </div>
@@ -541,11 +573,11 @@ export default function SellerDashboard() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-neutral-100 text-neutral-900 py-2.5 rounded-lg text-sm font-medium hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 relative overflow-hidden"
+                className="w-full bg-slate-900 text-white py-3.5 rounded-xl text-sm font-bold hover:bg-slate-800 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none relative overflow-hidden mt-2"
               >
                 {loading && uploadProgress > 0 && (
                   <div 
-                    className="absolute left-0 top-0 bottom-0 bg-neutral-200/50 transition-all duration-300 ease-out"
+                    className="absolute left-0 top-0 bottom-0 bg-white/20 transition-all duration-300 ease-out"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 )}
@@ -562,38 +594,38 @@ export default function SellerDashboard() {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Payout History */}
-          <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h2 className="text-lg font-semibold">{t('dashboard.payoutHistory')}</h2>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-200">
+              <h2 className="text-lg font-semibold text-slate-900">{t('dashboard.payoutHistory')}</h2>
             </div>
             <div className="p-0">
               {payoutHistory.length === 0 ? (
-                <div className="p-8 text-center text-neutral-500 text-sm">
+                <div className="p-8 text-center text-slate-500 text-sm">
                   {t('seller.noWithdrawalHistory')}
                 </div>
               ) : (
-                <div className="divide-y divide-neutral-100">
+                <div className="divide-y divide-slate-100">
                   {payoutHistory.map((payout) => (
-                    <div key={payout.id} className="p-4 flex items-center justify-between hover:bg-neutral-50 transition-colors">
+                    <div key={payout.id} className="p-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors">
                       <div className="flex items-center gap-4">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          payout.status === 'completed' ? 'bg-green-50 text-green-600' : 
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                          payout.status === 'completed' ? 'bg-emerald-50 text-emerald-600' : 
                           payout.status === 'rejected' ? 'bg-red-50 text-red-600' : 
-                          'bg-amber-50 text-amber-600'
+                          'bg-yellow-50 text-yellow-600'
                         }`}>
                           <Banknote className="w-5 h-5" />
                         </div>
                         <div>
-                          <p className="font-medium text-sm text-neutral-900 capitalize">{payout.method}</p>
-                          <p className="text-xs text-neutral-500">{new Date(payout.created_at).toLocaleDateString()}</p>
+                          <p className="font-medium text-sm text-slate-900 capitalize">{payout.method}</p>
+                          <p className="text-xs text-slate-500">{new Date(payout.created_at).toLocaleDateString()}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-neutral-900">{formatCurrency(parseFloat(payout.amount))}</p>
+                        <p className="font-semibold text-slate-900">{formatCurrency(parseFloat(payout.amount))}</p>
                         <p className={`text-xs font-medium capitalize ${
-                          payout.status === 'completed' ? 'text-green-600' : 
+                          payout.status === 'completed' ? 'text-emerald-600' : 
                           payout.status === 'rejected' ? 'text-red-600' : 
-                          'text-amber-600'
+                          'text-yellow-600'
                         }`}>
                           {payout.status}
                         </p>
@@ -606,37 +638,50 @@ export default function SellerDashboard() {
           </div>
 
           {/* My Products Table */}
-          <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h2 className="text-lg font-semibold">{t('dashboard.myProducts')}</h2>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-200 flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-slate-900">{t('dashboard.myProducts')}</h2>
             </div>
             <div className="overflow-x-auto">
               {myProducts.length === 0 ? (
-                <div className="text-center text-neutral-500 py-8">
-                  {t('seller.noProducts')}
+                <div className="text-center text-slate-500 py-12">
+                  <Package className="w-12 h-12 mx-auto text-slate-300 mb-3" />
+                  <p>{t('seller.noProducts')}</p>
                 </div>
               ) : (
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-neutral-50 text-neutral-500 text-sm border-b border-neutral-200">
+                    <tr className="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
                       <th className="p-4 font-medium">{t('dashboard.title')}</th>
-                      <th className="p-4 font-medium">{t('dashboard.price')}</th>
-                      <th className="p-4 font-medium">{t('seller.status') || 'Status'}</th>
+                      <th className="p-4 font-medium hidden sm:table-cell">{t('dashboard.price')}</th>
+                      <th className="p-4 font-medium hidden md:table-cell">{t('seller.status') || 'Status'}</th>
                       <th className="p-4 font-medium text-right">{t('seller.actions') || 'Actions'}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-neutral-100">
+                  <tbody className="divide-y divide-slate-100">
                     {myProducts.map(product => (
-                      <tr key={product.id} className="hover:bg-neutral-50 transition-colors">
+                      <tr key={product.id} className="hover:bg-slate-50/50 transition-colors group">
                         <td className="p-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-neutral-200 rounded-lg overflow-hidden flex-shrink-0">
+                            <div className="w-10 h-10 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 border border-slate-200 shadow-sm relative group-hover:shadow-md transition-shadow">
                               {product.image_url && <img src={product.image_url} alt={product.title} className="w-full h-full object-cover" />}
                             </div>
-                            <span className="font-medium text-neutral-900 line-clamp-1">{product.title}</span>
+                            <div>
+                              <span className="font-medium text-slate-900 line-clamp-1">{product.title}</span>
+                              <div className="sm:hidden flex items-center gap-2 mt-1">
+                                <span className="text-xs font-semibold text-indigo-600">{formatCurrency(product.price)}</span>
+                                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium capitalize border ${
+                                  product.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                                  product.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
+                                  'bg-yellow-50 text-yellow-700 border-yellow-200'
+                                }`}>
+                                  {product.status || 'pending'}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </td>
-                        <td className="p-4">
+                        <td className="p-4 hidden sm:table-cell">
                           {editingProduct?.id === product.id ? (
                             <form 
                               onSubmit={handleUpdatePrice}
@@ -648,53 +693,60 @@ export default function SellerDashboard() {
                                 min="0"
                                 value={editPrice}
                                 onChange={(e) => setEditPrice(e.target.value)}
-                                className="w-20 px-2 py-1 border border-neutral-300 rounded text-sm"
+                                className="w-20 px-2 py-1 border border-indigo-300 rounded text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                 autoFocus
                               />
                               <button 
                                 type="submit" 
                                 disabled={isUpdating}
-                                className="text-green-600 hover:text-green-700 disabled:opacity-50"
+                                className="text-emerald-600 hover:text-emerald-700 disabled:opacity-50 p-1 hover:bg-emerald-50 rounded"
                               >
                                 <CheckCircle className="w-4 h-4" />
                               </button>
                               <button 
                                 type="button" 
                                 onClick={() => setEditingProduct(null)}
-                                className="text-neutral-400 hover:text-neutral-600"
+                                className="text-slate-400 hover:text-slate-600 p-1 hover:bg-slate-100 rounded"
                               >
                                 <XCircle className="w-4 h-4" />
                               </button>
                             </form>
                           ) : (
-                            <span className="font-medium text-neutral-900">{formatCurrency(product.price)}</span>
+                            <span className="font-medium text-slate-900">{formatCurrency(product.price)}</span>
                           )}
                         </td>
-                        <td className="p-4">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-                            product.status === 'approved' ? 'bg-green-100 text-green-800' :
-                            product.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                            'bg-amber-100 text-amber-800'
+                        <td className="p-4 hidden md:table-cell">
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium capitalize border ${
+                            product.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                            product.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
+                            'bg-yellow-50 text-yellow-700 border-yellow-200'
                           }`}>
+                            <span className={`w-1.5 h-1.5 rounded-full mr-1.5 rtl:ml-1.5 rtl:mr-0 ${
+                              product.status === 'approved' ? 'bg-emerald-500' :
+                              product.status === 'rejected' ? 'bg-red-500' :
+                              'bg-yellow-500'
+                            }`}></span>
                             {product.status || 'pending'}
                           </span>
                         </td>
-                        <td className="p-4 text-right space-x-2 rtl:space-x-reverse">
+                        <td className="p-4 text-right space-x-1 rtl:space-x-reverse">
                           <button 
                             onClick={() => {
                               setEditingProduct(product);
                               setEditPrice(product.price.toString());
                             }}
-                            className="text-sm text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors"
+                            title={t('seller.editPrice') || 'Edit'}
+                            className="text-indigo-600 hover:text-indigo-800 p-2 rounded-lg hover:bg-indigo-50 transition-colors inline-flex items-center justify-center"
                           >
-                            {t('seller.editPrice') || 'Edit Price'}
+                            <Edit2 className="w-4 h-4" />
                           </button>
                           <button 
                             onClick={() => handleDeleteProduct(product.id)}
                             disabled={isDeleting === product.id}
-                            className="text-sm text-red-600 hover:text-red-800 font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors disabled:opacity-50"
+                            title={t('seller.delete') || 'Delete'}
+                            className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 inline-flex items-center justify-center"
                           >
-                            {isDeleting === product.id ? <Loader2 className="w-4 h-4 animate-spin inline" /> : (t('seller.delete') || 'Delete')}
+                            {isDeleting === product.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                           </button>
                         </td>
                       </tr>

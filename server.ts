@@ -70,12 +70,12 @@ async function startServer() {
 
           if (!existingOrder) {
             // Insert new order
-            const { error } = await supabase
+            const { error: insertError } = await supabase
               .from('orders')
               .insert([
                 {
                   product_id: productId,
-                  user_id: userId || null,
+                  user_id: userId === 'anonymous' ? null : userId,
                   amount: amount,
                   price: amount,
                   status: 'completed',
@@ -84,10 +84,46 @@ async function startServer() {
                 }
               ]);
 
-            if (error) {
-              console.error('Error inserting order:', error);
+            if (insertError) {
+              console.error('Error inserting order:', insertError);
             } else {
               console.log('Order created successfully for session:', session.id);
+              
+              // Get product to find seller_id
+              const { data: productData, error: productError } = await supabase
+                .from('products')
+                .select('seller_id')
+                .eq('id', productId)
+                .single();
+                
+              if (productData?.seller_id) {
+                // Calculate seller earnings (price minus 10% commission)
+                const sellerEarnings = amount * 0.9;
+                
+                // Fetch current wallet balance
+                const { data: sellerProfile, error: profileError } = await supabase
+                  .from('profiles')
+                  .select('wallet_balance')
+                  .eq('id', productData.seller_id)
+                  .single();
+                  
+                if (sellerProfile) {
+                  const currentBalance = sellerProfile.wallet_balance || 0;
+                  const newBalance = currentBalance + sellerEarnings;
+                  
+                  // Update wallet balance
+                  const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update({ wallet_balance: newBalance })
+                    .eq('id', productData.seller_id);
+                    
+                  if (updateError) {
+                    console.error('Error updating seller wallet balance:', updateError);
+                  } else {
+                    console.log(`Updated seller ${productData.seller_id} wallet balance to ${newBalance}`);
+                  }
+                }
+              }
             }
           }
         } catch (err) {
@@ -187,6 +223,36 @@ async function startServer() {
 
             if (error) {
               console.error('Error inserting order during verification:', error);
+            } else {
+              // Get product to find seller_id
+              const { data: productData } = await supabase
+                .from('products')
+                .select('seller_id')
+                .eq('id', productId)
+                .single();
+                
+              if (productData?.seller_id) {
+                // Calculate seller earnings (price minus 10% commission)
+                const sellerEarnings = amount * 0.9;
+                
+                // Fetch current wallet balance
+                const { data: sellerProfile } = await supabase
+                  .from('profiles')
+                  .select('wallet_balance')
+                  .eq('id', productData.seller_id)
+                  .single();
+                  
+                if (sellerProfile) {
+                  const currentBalance = sellerProfile.wallet_balance || 0;
+                  const newBalance = currentBalance + sellerEarnings;
+                  
+                  // Update wallet balance
+                  await supabase
+                    .from('profiles')
+                    .update({ wallet_balance: newBalance })
+                    .eq('id', productData.seller_id);
+                }
+              }
             }
           }
 
